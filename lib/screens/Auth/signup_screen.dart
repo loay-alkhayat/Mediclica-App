@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mediclica/componnets/button_width.dart';
 import 'package:mediclica/resources/color_manager.dart';
-import 'package:mediclica/resources/values_manager.dart';
 import 'package:mediclica/screens/Auth/bloc/cubit.dart';
 import 'package:mediclica/screens/Auth/user_information.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -30,7 +29,7 @@ class SignUpScreen extends StatelessWidget {
                   style: TextStyle(
                       color: ColorManager.primary,
                       fontWeight: FontWeight.w700,
-                      fontSize: AppSize.s22),
+                      fontSize: 22),
                 ),
                 SizedBox(
                   height: 2.h,
@@ -41,7 +40,7 @@ class SignUpScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: AppSize.s17,
+                    fontSize: 17,
                     color: ColorManager.grey,
                   ),
                 ),

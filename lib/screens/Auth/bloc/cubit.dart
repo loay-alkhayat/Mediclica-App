@@ -1,8 +1,6 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:mediclica/core/constants/apis_url.dart';
 import 'package:mediclica/core/services/cache_storage_services.dart';
 import 'package:mediclica/core/services/dio_services.dart';
@@ -27,71 +25,36 @@ class AuthCubit extends Cubit<AuthStates> {
   Future register({
     required String? email,
     required String firstname,
-    required String gender,
     required String lastname,
     required String phone,
     String? token,
     required String password,
     required String confirmPassword,
-    required String birthDay,
-    required String userImage,
   }) async {
     emit(RegisterLoadingState());
     await DioServices().post(
       url: ApiUrls.register,
       data: {
         'email': email,
-        'gender': gender,
-        'display_name': firstname + lastname,
         'first_name': firstname,
         "last_name": lastname,
         "phone": phone,
         "fcm_token": "asdsdaadw24252wwssad53",
         'password': password,
         'password_confirmation': confirmPassword,
-        'birth_date': birthDay,
         'role': 'client',
-        'image': userImage,
       },
     ).then((value) {
       registerModel = RegisterModel.fromJson(value.data);
-
       CacheHelper.saveData(
           key: "barrierToken", value: registerModel!.data!.token.toString());
-
       emit(RegisterSucssesState());
     }).catchError((error) {
-      logger.i(error);
+      if (kDebugMode) {
+        print(error);
+      }
       emit(RegisterErrorState());
     });
-  }
-
-  ///ContinueUserInformation
-  String gender = "";
-  bool selectGender = false;
-  CheckGender(var value) {
-    gender = value;
-    selectGender = !selectGender;
-    selectGender == true
-        ? emit(UserContinueInfoCheckGenderState())
-        : emit(UserContinueInfoCheckGender2State());
-  }
-
-  String userBirthday = '2010/10/16';
-  bool selectBirhday = false;
-  void setBirthday(DateTime? birthday) {
-    userBirthday = DateFormat('yyyy-MM-dd').format(birthday!).toString();
-    selectBirhday = true;
-
-    emit(UserContinueInfoChooseDateState());
-  }
-
-  File? selectedImage;
-
-  void setSelectedImage(File? image) {
-    selectedImage = image!;
-    print(selectedImage);
-    emit(UserContinueInfoChooseImageState());
   }
 
   ///LoginScreen

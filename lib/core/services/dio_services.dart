@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:mediclica/core/constants/apis_url.dart';
@@ -40,10 +38,6 @@ class DioServices {
       'Authorization': 'Bearer $token',
     };
 
-    // if (token != null && token.isNotEmpty) {
-    //   headers['Authorization'] = 'Bearer $token';
-    // }
-
     return headers;
   }
 
@@ -74,8 +68,7 @@ class DioServices {
   }) async {
     logger.d(
         "============== POST METHOD ================= \n URL: ($url) \n Parameters: $data");
-    logger.d("============== POST METHOD ================= \n URL: ($url) \n "
-        "Parameters: $query");
+
     return await dio!.post(
       ///
       url,
@@ -119,40 +112,6 @@ class DioServices {
       queryParameters: query,
       cancelToken: cancelToken,
       options: Options(headers: headers ?? _baseHeader),
-    );
-  }
-
-  Future<Response?> postVerification({
-    required String url,
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? query,
-    Map<String, dynamic>? headers,
-    CancelToken? cancelToken,
-  }) async {
-    return await dio!.post(
-      url,
-      data: data,
-      queryParameters: query,
-      cancelToken: cancelToken,
-      options: Options(headers: headers ?? _baseHeader),
-    );
-  }
-
-  Future<Response?> postImage({
-    String? contentype,
-    required String url,
-    required var data,
-    Map<String, dynamic>? query,
-  }) async {
-    return await dio!.post(
-      url,
-      queryParameters: query,
-      data: data,
-      options: Options(
-        headers: {
-          HttpHeaders.contentTypeHeader: contentype,
-        },
-      ),
     );
   }
 }

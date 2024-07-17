@@ -1,7 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mediclica/resources/color_manager.dart';
-import 'package:mediclica/screens/Centers/centers_screen.dart';
 import 'package:mediclica/screens/Layout/Bloc/cubit.dart';
 import 'package:mediclica/screens/Profile/my_profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -11,7 +10,7 @@ import '../Doctor/doctors_screen.dart';
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({Key? key}) : super(key: key);
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -24,7 +23,6 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> pages = [
     const HomeScreen(),
     DoctorsScreen(),
-    CentersScreen(),
     const MyAppointmentScreen(),
     const MyProfileScreen(),
   ];
@@ -41,13 +39,9 @@ class _MainScreenState extends State<MainScreen> {
         scrollBehavior: const ScrollBehavior(),
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        itemCount: 5,
+        itemCount: 4,
         itemBuilder: (context, index) {
-          return AnimatedOpacity(
-            opacity: index == _bottomNavIndex ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 2000),
-            child: pages[index],
-          );
+          return pages[index];
         },
         onPageChanged: (index) {
           setState(() {
@@ -56,17 +50,15 @@ class _MainScreenState extends State<MainScreen> {
         },
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: [
+        icons: const [
           Icons.home_outlined,
           Icons.person_search,
-          Icons.local_hospital,
           Icons.calendar_month_outlined,
           Icons.person,
         ],
         activeColor: ColorManager.primary,
         activeIndex: _bottomNavIndex,
         gapWidth: 2.w,
-        notchSmoothness: NotchSmoothness.verySmoothEdge,
         onTap: (index) {
           _pageController.animateToPage(
             index,
@@ -74,21 +66,7 @@ class _MainScreenState extends State<MainScreen> {
             curve: Curves.fastLinearToSlowEaseIn,
           );
           if (index == 1) {
-            // if (LayoutCubit.get(context).getDoctorModel!.data!.isEmpty)
-
-            LayoutCubit.get(context).pager = 1;
             LayoutCubit.get(context).getDoctors();
-          }
-          if (index == 2) {
-            LayoutCubit.get(context).centersPager = 1;
-            LayoutCubit.get(context).getCenters();
-          }
-          if (index == 3) {
-            // if (LayoutCubit.get(context).getDoctorModel!.data!.isEmpty)
-
-            LayoutCubit.get(context).getAppontment(
-                status: LayoutCubit.get(context)
-                    .myAppointment[LayoutCubit.get(context).appoinmentIndex]);
           }
         },
       ),

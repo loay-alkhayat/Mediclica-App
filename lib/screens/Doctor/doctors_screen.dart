@@ -4,70 +4,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mediclica/componnets/doctor_card_widget.dart';
 import 'package:mediclica/resources/color_manager.dart';
-import 'package:mediclica/screens/Doctor/search_doctors_screen.dart';
 import 'package:mediclica/screens/Layout/Bloc/cubit.dart';
 import 'package:mediclica/screens/Layout/Bloc/states.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../componnets/functions.dart';
-import 'doctor_details.dart';
-
-class DoctorsScreen extends StatefulWidget {
+class DoctorsScreen extends StatelessWidget {
   DoctorsScreen({Key? key}) : super(key: key);
-
-  @override
-  State<DoctorsScreen> createState() => _DoctorsScreenState();
-}
-
-class _DoctorsScreenState extends State<DoctorsScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 1000),
-    );
-    _controller.forward();
-  }
 
   @override
   Widget build(BuildContext context) {
     LayoutCubit cubit = LayoutCubit.get(context);
-    return BlocConsumer<LayoutCubit, LayoutStates>(
-      builder: (context, state) => Scaffold(
-          appBar: AppBar(
-            forceMaterialTransparency: true,
-            centerTitle: true,
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            title: Text(
-              "Doctors",
-              style: TextStyle(
-                  color: ColorManager.black, fontWeight: FontWeight.w500),
-            ),
+    return Scaffold(
+        appBar: AppBar(
+          forceMaterialTransparency: true,
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          title: Text(
+            "Doctors",
+            style: TextStyle(
+                color: ColorManager.black, fontWeight: FontWeight.w500),
           ),
-          body: OverlayLoaderWithAppIcon(
-            borderRadius: 90.w,
-            appIconSize: 20.w,
-            appIcon: ClipRRect(
-                borderRadius: BorderRadius.circular(20.w),
-                child: Image.asset("assets/Mediclica.jpg")),
-            overlayBackgroundColor: ColorManager.lightGrey,
-            circularProgressColor: ColorManager.grey,
-            isLoading: state is LayoutGetDoctorsLoadingState,
-            child: Padding(
-              padding: EdgeInsets.only(right: 5.w, bottom: 5.w, left: 5.w),
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: () =>
-                        Functions.navigatorPush(context, SearchDoctorsScreen()),
-                    overlayColor: MaterialStatePropertyAll(Colors.transparent),
-                    child: Row(
+        ),
+        body: BlocBuilder<LayoutCubit, LayoutStates>(
+          builder: (context, state) {
+            return OverlayLoaderWithAppIcon(
+              borderRadius: 90.w,
+              appIconSize: 20.w,
+              appIcon: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.w),
+                  child: Image.asset("assets/Mediclica.jpg")),
+              overlayBackgroundColor: ColorManager.lightGrey,
+              circularProgressColor: ColorManager.grey,
+              isLoading: state is LayoutGetDoctorsLoadingState,
+              child: Padding(
+                padding: EdgeInsets.only(right: 5.w, bottom: 5.w, left: 5.w),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
                         Expanded(
                           child: Container(
@@ -78,15 +53,15 @@ class _DoctorsScreenState extends State<DoctorsScreen>
                               borderRadius: BorderRadius.circular(3.w),
                             ),
                             child: TextFormField(
-                              enabled: false,
-                              scrollPhysics: BouncingScrollPhysics(),
+                              scrollPhysics: const BouncingScrollPhysics(),
                               scribbleEnabled: true,
                               enableInteractiveSelection: false,
                               decoration: InputDecoration(
                                 fillColor: ColorManager.primary,
                                 focusColor: ColorManager.primary,
                                 hoverColor: ColorManager.primary,
-                                hintFadeDuration: Duration(milliseconds: 300),
+                                hintFadeDuration:
+                                    const Duration(milliseconds: 300),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(
                                     3.w,
@@ -120,68 +95,31 @@ class _DoctorsScreenState extends State<DoctorsScreen>
                         )
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 3.h,
-                  ),
-                  ConditionalBuilder(
-                    condition: state is! LayoutGetDoctorsLoadingState,
-                    builder: (context) => Expanded(
-                      child: ListView.builder(
-                        controller: cubit.scrollController,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: Offset(1.0, 0.0),
-                              end: Offset.zero,
-                            ).animate(
-                              CurvedAnimation(
-                                parent: _controller,
-                                curve: Interval(
-                                  (index / cubit.getDoctorModel!.data!.length) *
-                                      0.9,
-                                  1.0,
-                                  curve: Curves.easeOut,
-                                ),
-                              ),
-                            ),
-                            child: InkWell(
-                              overlayColor:
-                                  MaterialStateProperty.all(ColorManager.grey2),
-                              borderRadius: BorderRadius.circular(18),
-                              onTap: () async {
-                                cubit.getDoctorDetaiels(
-                                    doctorID:
-                                        cubit.getDoctorModel!.data![index].id!);
-                                Functions.navigatorPush(
-                                    context, DoctorDetailsScreen());
-                              },
-                              child: DoctorCardWidget(
-                                  getDoctorModel:
-                                      cubit.getDoctorModel!.data![index]),
-                            ),
-                          );
-                        },
-                        itemCount: cubit.getDoctorModel!.data!.length,
+                    SizedBox(
+                      height: 3.h,
+                    ),
+                    ConditionalBuilder(
+                      condition: state is! LayoutGetDoctorsLoadingState,
+                      builder: (context) => Expanded(
+                        child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return DoctorCardWidget(
+                                getDoctorModel:
+                                    cubit.getDoctorModel!.data![index]);
+                          },
+                          itemCount: cubit.getDoctorModel!.data!.length,
+                        ),
                       ),
-                    ),
-                    fallback: (context) => Center(
-                      child: Container(),
-                    ),
-                  )
-                ],
+                      fallback: (context) => Center(
+                        child: Container(),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          )),
-      listener: (context, state) {},
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    // LayoutCubit.get(context).scrollController!.dispose();
-    super.dispose();
+            );
+          },
+        ));
   }
 }

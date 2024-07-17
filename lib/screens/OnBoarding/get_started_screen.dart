@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mediclica/componnets/button_width.dart';
 import 'package:mediclica/resources/color_manager.dart';
-import 'package:mediclica/resources/values_manager.dart';
 import 'package:mediclica/screens/Auth/login_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -56,8 +55,7 @@ class GetStartedScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       "Best Doctor Appointment App",
                       style: TextStyle(
-                          fontSize: AppSize.s20.sp,
-                          color: ColorManager.primary),
+                          fontSize: 20.sp, color: ColorManager.primary),
                     ),
                   ),
                   Padding(
@@ -66,8 +64,8 @@ class GetStartedScreen extends StatelessWidget {
                       "Manage and schedule all of your medical appointments "
                       "easily with Mediclica to get a new experience.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: AppSize.s16.sp, color: ColorManager.grey),
+                      style:
+                          TextStyle(fontSize: 16.sp, color: ColorManager.grey),
                     ),
                   ),
                   Row(

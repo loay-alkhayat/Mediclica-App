@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../resources/color_manager.dart';
-import '../resources/values_manager.dart';
 
 class widthButton extends StatelessWidget {
   String textButton;
   VoidCallback? onPress;
 
   widthButton({
+    super.key,
     required this.textButton,
     this.onPress,
   });
@@ -38,7 +38,7 @@ class widthButton extends StatelessWidget {
           style: TextStyle(
               color: ColorManager.white,
               fontWeight: FontWeight.bold,
-              fontSize: AppSize.s17.sp),
+              fontSize: 17.sp),
         ),
       ),
     );

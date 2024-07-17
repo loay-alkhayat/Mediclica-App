@@ -15,27 +15,19 @@ import 'bloc_observer/bloc_observer.dart';
 Widget? home;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setPreferredOrientations(
-  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
-  ErrorWidget.builder = (FlutterErrorDetails details) => Scaffold(
-        body: Center(
-          child: Text("Something Went wrong"),
-        ),
-      );
   Bloc.observer = MyBlocObserver();
   await DioServices().init();
   await CacheHelper.init();
 
   var barrierToken = CacheHelper.getData(key: "barrierToken");
-  print(barrierToken);
+
   if (barrierToken != null) {
-    home = MainScreen();
+    home = const MainScreen();
   } else {
     home = GetStartedScreen();
   }
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
