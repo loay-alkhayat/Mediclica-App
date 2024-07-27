@@ -9,6 +9,10 @@ class CenterCardWidget extends StatelessWidget {
   CentersData? centersData;
   @override
   Widget build(BuildContext context) {
+    // Adding a null check to prevent errors when data is not available
+    if (centersData == null) {
+      return Container(); // Or show an error message or placeholder
+    }
     return Material(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 2,
@@ -41,7 +45,10 @@ class CenterCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                centersData!.relationships!.categories![0].name!,
+                centersData!.relationships!.categories != null &&
+                        centersData!.relationships!.categories!.isNotEmpty
+                    ? centersData!.relationships!.categories![0].name!
+                    : "Unknown Category",
                 style: TextStyle(color: ColorManager.grey),
               ),
               Text(
@@ -51,7 +58,7 @@ class CenterCardWidget extends StatelessWidget {
               Text(
                 centersData!.relationships!.location != null
                     ? centersData!.relationships!.location!.address!
-                    : "Midan",
+                    : "Unknown Location",
                 style: TextStyle(color: ColorManager.grey),
               ),
             ],

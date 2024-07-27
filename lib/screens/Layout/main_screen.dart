@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
         },
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: [
+        icons: const [
           Icons.home_outlined,
           Icons.person_search,
           Icons.local_hospital,

@@ -5,14 +5,12 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../models/CenterScreensModels/center_doctors_by_category_model.dart';
 import '../models/DoctorsScreensModels/doctor_detaiels_model.dart';
 import '../models/DoctorsScreensModels/search_doctor_model.dart';
-import '../models/MainScreensModels/my_appointment_model.dart';
 import '../resources/color_manager.dart';
 
 class DoctorCardWidget extends StatelessWidget {
   bool appointmentScreen;
   GetDoctorsData? getDoctorModel;
   DoctorDetaielsData? doctorDetaielsData;
-  MyAppointmentData? myAppointmentData;
   SearchDoctorData? searchDoctorData;
   CenterDoctorsByGategoryData? centerDoctorsByGategoryData;
 
@@ -20,7 +18,6 @@ class DoctorCardWidget extends StatelessWidget {
       {this.appointmentScreen = false,
       this.getDoctorModel,
       this.doctorDetaielsData,
-      this.myAppointmentData,
       this.searchDoctorData});
 
   @override
@@ -43,10 +40,7 @@ class DoctorCardWidget extends StatelessWidget {
                     : searchDoctorData != null
                         ? NetworkImage("https://medical.alhasanshnnar"
                             ".com/${searchDoctorData!.attributes!.image!}")
-                        : myAppointmentData != null
-                            ? NetworkImage("https://medical.alhasanshnnar"
-                                ".com/${myAppointmentData!.relationships!.image!}")
-                            : NetworkImage('assets/doctor_image.png'),
+                        : NetworkImage('assets/doctor_image.png'),
           ),
         ),
         Padding(
@@ -56,57 +50,56 @@ class DoctorCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                width: 50.w,
                 child: Text(
-                  "${searchDoctorData != null ? searchDoctorData!.attributes!.displayName! : myAppointmentData != null ? myAppointmentData!.relationships!.doctor!.displayName!.toString() : getDoctorModel != null ? getDoctorModel!.attributes!.displayName.toString() : doctorDetaielsData!.attributes!.displayName.toString()}",
+                  searchDoctorData != null
+                      ? searchDoctorData!.attributes!.displayName!
+                      : getDoctorModel != null
+                          ? getDoctorModel!.attributes!.displayName.toString()
+                          : doctorDetaielsData!.attributes!.displayName
+                              .toString(),
                   overflow: TextOverflow.ellipsis,
                   style:
                       TextStyle(fontWeight: FontWeight.w600, fontSize: 17.sp),
                 ),
-                width: 50.w,
               ),
               SizedBox(
                 height: 1.h,
               ),
               !appointmentScreen
-                  ? Text(
-                      searchDoctorData != null
-                          ? searchDoctorData!.relationships!.category!.name!
-                          : myAppointmentData != null
-                              ? myAppointmentData!.attributes!.category!
-                              : getDoctorModel != null
-                                  ? getDoctorModel!
-                                      .relationships!.category!.name
-                                      .toString()
-                                  : doctorDetaielsData!
-                                      .relationships!.category!.name
-                                      .toString(),
-                      style: TextStyle(color: ColorManager.grey),
+                  ? Container(
+                      width: 50.w,
+                      child: Text(
+                        searchDoctorData != null
+                            ? searchDoctorData!.relationships!.category!.name!
+                            : getDoctorModel != null
+                                ? getDoctorModel!.relationships!.category!.name
+                                    .toString()
+                                : doctorDetaielsData!
+                                    .relationships!.category!.name
+                                    .toString(),
+                        style: TextStyle(color: ColorManager.grey),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
                     )
                   : Container(),
               SizedBox(
                 height: 1.h,
               ),
-              !appointmentScreen
-                  ? Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: ColorManager.amber,
-                          size: 5.w,
-                        ),
-                        SizedBox(
-                          width: 1.w,
-                        ),
-                        Text("4.5", style: TextStyle(color: ColorManager.grey)),
-                      ],
-                    )
-                  : Text(
-                      myAppointmentData!.attributes!.startTime! +
-                          "  |  " +
-                          myAppointmentData!.attributes!.date!,
-                      style:
-                          TextStyle(color: ColorManager.grey, fontSize: 16.sp),
-                    ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: ColorManager.amber,
+                    size: 5.w,
+                  ),
+                  SizedBox(
+                    width: 1.w,
+                  ),
+                  Text("4.5", style: TextStyle(color: ColorManager.grey)),
+                ],
+              )
             ],
           ),
         ),

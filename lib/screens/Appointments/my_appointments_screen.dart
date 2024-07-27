@@ -2,12 +2,13 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mediclica/componnets/doctor_card_widget.dart';
 import 'package:mediclica/resources/color_manager.dart';
 import 'package:mediclica/screens/Layout/Bloc/cubit.dart';
 import 'package:mediclica/screens/Layout/Bloc/states.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import '../../componnets/my_appoinments_card.dart';
 
 class MyAppointmentScreen extends StatefulWidget {
   const MyAppointmentScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
     _controller.forward();
   }
@@ -41,7 +42,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
     return BlocConsumer<LayoutCubit, LayoutStates>(
       builder: (context, state) => DefaultTabController(
         initialIndex: cubit.appoinmentIndex,
-        animationDuration: Duration(seconds: 1),
+        animationDuration: const Duration(seconds: 1),
         length: 3,
         child: Scaffold(
           appBar: AppBar(
@@ -57,7 +58,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
               ),
             ),
             bottom: TabBar(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorColor: ColorManager.primary,
               onTap: (index) {
@@ -65,15 +66,14 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                 cubit.myAppointmentModel!.data!.clear();
                 cubit.getAppontment(
                     status: cubit.myAppointment[cubit.appoinmentIndex]);
-                print(index);
               },
               labelColor: ColorManager.primary,
               unselectedLabelColor: ColorManager.grey,
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               tabs: [
-                Tab(text: 'Upcoming'),
-                Tab(text: 'Completed'),
-                Tab(text: 'Cancelled'),
+                const Tab(text: 'Upcoming'),
+                const Tab(text: 'Completed'),
+                const Tab(text: 'Cancelled'),
               ],
             ),
           ),
@@ -94,21 +94,21 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                   builder: (context) => Padding(
                         padding: EdgeInsets.all(5.w),
                         child: TabBarView(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           children: [
-                            // Content for the "Upcoming" tab
                             Column(
                               children: [
                                 Expanded(
                                   child:
                                       cubit.myAppointmentModel!.data!.isNotEmpty
                                           ? ListView.builder(
-                                              physics: BouncingScrollPhysics(),
+                                              physics:
+                                                  const BouncingScrollPhysics(),
                                               itemBuilder: (context, index) {
                                                 return SlideTransition(
                                                   position: Tween<Offset>(
-                                                          begin:
-                                                              Offset(0.0, 3.0),
+                                                          begin: const Offset(
+                                                              0.0, 3.0),
                                                           end: Offset.zero)
                                                       .animate(
                                                     CurvedAnimation(
@@ -146,9 +146,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            DoctorCardWidget(
-                                                              appointmentScreen:
-                                                                  true,
+                                                            MyAppoinmentsCard(
                                                               myAppointmentData: cubit
                                                                   .myAppointmentModel!
                                                                   .data![index],
@@ -162,7 +160,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                                                               child:
                                                                   ElevatedButton(
                                                                       style: ButtonStyle(
-                                                                          backgroundColor: MaterialStatePropertyAll(ColorManager
+                                                                          backgroundColor: WidgetStatePropertyAll(ColorManager
                                                                               .primary)),
                                                                       onPressed:
                                                                           () async {
@@ -174,7 +172,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                                                                                 cubit.myAppointment[cubit.appoinmentIndex]);
                                                                       },
                                                                       child:
-                                                                          Text(
+                                                                          const Text(
                                                                         "Cancel Appointment",
                                                                         style: TextStyle(
                                                                             color:
@@ -206,7 +204,8 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                                   child: cubit
                                           .myAppointmentModel!.data!.isNotEmpty
                                       ? ListView.separated(
-                                          physics: BouncingScrollPhysics(),
+                                          physics:
+                                              const BouncingScrollPhysics(),
                                           itemBuilder: (context, index) {
                                             return Container(
                                               height: 23.h,
@@ -249,7 +248,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                                                     Divider(
                                                       color: ColorManager.grey1,
                                                     ),
-                                                    DoctorCardWidget(
+                                                    MyAppoinmentsCard(
                                                       myAppointmentData: cubit
                                                           .myAppointmentModel!
                                                           .data![index],
@@ -279,7 +278,8 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                                   child: cubit
                                           .myAppointmentModel!.data!.isNotEmpty
                                       ? ListView.separated(
-                                          physics: BouncingScrollPhysics(),
+                                          physics:
+                                              const BouncingScrollPhysics(),
                                           itemBuilder: (context, index) =>
                                               Container(
                                                 height: 23.h,
@@ -325,7 +325,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen>
                                                         color:
                                                             ColorManager.grey1,
                                                       ),
-                                                      DoctorCardWidget(
+                                                      MyAppoinmentsCard(
                                                         myAppointmentData: cubit
                                                             .myAppointmentModel!
                                                             .data![index],

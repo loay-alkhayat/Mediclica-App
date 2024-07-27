@@ -68,7 +68,7 @@ class LayoutCubit extends Cubit<LayoutStates> {
       'status': status,
     }).then((value) {
       myAppointmentModel = MyAppointmentModel.fromJson(value.data);
-      print(myAppointmentModel!.data![3].id);
+      print(myAppointmentModel!.data!.length);
       emit(GetAppointmentsSucsessState());
     }).catchError((onError) {
       logger.d(onError);
@@ -77,6 +77,13 @@ class LayoutCubit extends Cubit<LayoutStates> {
   }
 
   ///CentersScreens
+  void resetDoctorSelection() {
+    doctorincenterIndex = -1;
+    elementTaped = false;
+    boolList =
+        List<bool>.filled(centerDoctorsByGategoryModel!.data!.length, false);
+    emit(ResetDoctorSelectionState());
+  }
 
   ScrollController? scrollCentersController;
   CentersModel? centersModel;
@@ -93,10 +100,10 @@ class LayoutCubit extends Cubit<LayoutStates> {
     }
     try {
       final value =
-          await DioServices().get(url: ApiUrls.centers + "?page=$centersPager");
+          await DioServices().get(url: "${ApiUrls.centers}?page=$centersPager");
       centersModel = CentersModel.fromJson(value.data);
       getCentersData = true;
-
+      print(centersModel!.data!.length);
       emit(GetCentersSucsessState());
     } catch (error) {
       getCentersData = false;

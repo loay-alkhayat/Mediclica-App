@@ -61,17 +61,17 @@ class CenterDetailsScreen extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 8.5.h, right: 7.w),
           child: Container(
             color: ColorManager.primary,
+            width: 30.w,
+            height: 3.5.h,
             child: Center(
               child: Text(
                 cubit.centerDetaielsModel!.data!.attributes!.name!,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            width: 30.w,
-            height: 3.5.h,
           ),
         ),
       ],
@@ -82,14 +82,14 @@ class CenterDetailsScreen extends StatelessWidget {
     return Column(
       children: [
         TabBar(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           indicatorSize: TabBarIndicatorSize.tab,
           indicatorColor: ColorManager.primary,
           onTap: (index) {},
           labelColor: ColorManager.primary,
           unselectedLabelColor: ColorManager.grey,
           padding: EdgeInsets.symmetric(horizontal: 5.w),
-          tabs: [
+          tabs: const [
             Tab(text: "About Us"),
             Tab(text: "Our Services"),
           ],
@@ -175,30 +175,36 @@ class CenterDetailsScreen extends StatelessWidget {
       children: [
         Expanded(
           child: ListView.separated(
-            itemBuilder: (context, index) => buildExpansionPanelList(cubit, index, state),
+            itemBuilder: (context, index) =>
+                buildExpansionPanelList(cubit, index, state),
             separatorBuilder: (context, index) => SizedBox(height: 2.h),
-            itemCount: cubit.centerDetaielsModel!.data!.relationships!.categories!.length,
+            itemCount: cubit
+                .centerDetaielsModel!.data!.relationships!.categories!.length,
           ),
         ),
       ],
     );
   }
 
-  Widget buildExpansionPanelList(LayoutCubit cubit, int index, LayoutStates state) {
+  Widget buildExpansionPanelList(
+      LayoutCubit cubit, int index, LayoutStates state) {
     return ExpansionPanelList(
-      animationDuration: Duration(seconds: 1),
+      animationDuration: const Duration(seconds: 1),
       dividerColor: ColorManager.lightGrey,
       elevation: 2,
-      expandedHeaderPadding: EdgeInsets.all(0),
+      expandedHeaderPadding: const EdgeInsets.all(0),
       materialGapSize: 4.h,
-      expansionCallback: (int index, bool isExpanded) {
+      expansionCallback: (int panelIndex, bool isExpanded) {
         cubit.changeExpanded(expanded: isExpanded);
 
-        if (cubit.expand) {
+        if (isExpanded) {
           cubit.getDoctorByCatId(
             centerID: cubit.centerDetaielsModel!.data!.id!,
-            categoryID: cubit.centerDetaielsModel!.data!.relationships!.categories![index].id!,
+            categoryID: cubit.centerDetaielsModel!.data!.relationships!
+                .categories![index].id!,
           );
+        } else {
+          cubit.resetDoctorSelection();
         }
       },
       children: [
@@ -207,7 +213,8 @@ class CenterDetailsScreen extends StatelessWidget {
           canTapOnHeader: true,
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(
-              title: Text(cubit.centerDetaielsModel!.data!.relationships!.categories![index].name!),
+              title: Text(cubit.centerDetaielsModel!.data!.relationships!
+                  .categories![index].name!),
             );
           },
           body: buildDoctorList(cubit, state),
@@ -228,8 +235,8 @@ class CenterDetailsScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             return buildDoctorItem(cubit, index, state);
           },
-          separatorBuilder: (context, index) => SizedBox(width: 10.0),
-          itemCount: 1,
+          separatorBuilder: (context, index) => const SizedBox(width: 10.0),
+          itemCount: cubit.centerDoctorsByGategoryModel!.data!.length,
         ),
       ),
     );
@@ -237,37 +244,44 @@ class CenterDetailsScreen extends StatelessWidget {
 
   Widget buildDoctorItem(LayoutCubit cubit, int index, LayoutStates state) {
     return state is GetCenterDoctorLoadingState
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : Column(
-      children: [
-        InkWell(
-          borderRadius: BorderRadius.circular(25),
-          onTap: () {
-            cubit.doctorInCenterId = cubit.centerDoctorsByGategoryModel!.data![index].id!;
-            cubit.doctorINdex = index;
-            cubit.changeTapped(index: index);
-            cubit.elementTaped = true;
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              color: cubit.doctorincenterIndex == index ? ColorManager.primary : Colors.white,
-              child: CircleAvatar(
-                backgroundColor: cubit.boolList[index] == true ? ColorManager.primary : ColorManager.white,
-                backgroundImage: NetworkImage("https://medical.alhasanshnnar.com/${cubit.centerDoctorsByGategoryModel!.data![index].attributes!.image}"),
-                radius: 7.w,
+            children: [
+              InkWell(
+                borderRadius: BorderRadius.circular(25),
+                onTap: () {
+                  cubit.doctorInCenterId =
+                      cubit.centerDoctorsByGategoryModel!.data![index].id!;
+                  cubit.doctorINdex = index;
+                  cubit.changeTapped(index: index);
+                  cubit.elementTaped = true;
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    color: cubit.doctorincenterIndex == index
+                        ? ColorManager.primary
+                        : Colors.white,
+                    child: CircleAvatar(
+                      backgroundColor: cubit.boolList[index] == true
+                          ? ColorManager.primary
+                          : ColorManager.white,
+                      backgroundImage: NetworkImage(
+                          "https://medical.alhasanshnnar.com/${cubit.centerDoctorsByGategoryModel!.data![index].attributes!.image}"),
+                      radius: 7.w,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-        Text(
-          cubit.centerDoctorsByGategoryModel!.data![index].attributes!.displayName!,
-          style: TextStyle(),
-          maxLines: 2,
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
+              Text(
+                cubit.centerDoctorsByGategoryModel!.data![index].attributes!
+                    .displayName!,
+                style: const TextStyle(),
+                maxLines: 2,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          );
   }
 
   Widget buildBottomNavigationBar(BuildContext context, LayoutCubit cubit) {
@@ -278,13 +292,26 @@ class CenterDetailsScreen extends StatelessWidget {
           widthButton(
             textButton: "Make An Appointment",
             onPress: () async {
-              if (cubit.centerDoctorsByGategoryModel!.message == "No Work Hours for this doctor") {
+              if (cubit.centerDoctorsByGategoryModel!.message ==
+                  "No Work Hours for this doctor") {
                 showToast(message: "NoTimesForThisDoctor");
               } else if (cubit.elementTaped == true) {
-                cubit.getDoctorDetaiels(doctorID: cubit.centerDoctorsByGategoryModel!.data![cubit.doctorINdex].id!);
-                cubit.getDoctorDates(doctorID: cubit.centerDoctorsByGategoryModel!.data![cubit.doctorINdex].id!, centerID: cubit.centerDetaielsModel!.data!.id!);
-                cubit.getDoctorServices(doctorID: cubit.centerDoctorsByGategoryModel!.data![cubit.doctorINdex].id!);
-                Functions.navigatorPush(context, BookAppointmentScreen(doctorDatesModel: cubit.doctorDatesModel));
+                cubit.getDoctorDetaiels(
+                    doctorID: cubit.centerDoctorsByGategoryModel!
+                        .data![cubit.doctorINdex].id!);
+                cubit.getDoctorDates(
+                    doctorID: cubit.centerDoctorsByGategoryModel!
+                        .data![cubit.doctorINdex].id!,
+                    centerID: cubit.centerDetaielsModel!.data!.id!);
+                cubit.getDoctorServices(
+                    doctorID: cubit.centerDoctorsByGategoryModel!
+                        .data![cubit.doctorINdex].id!);
+                Functions.navigatorPush(
+                    context,
+                    BookAppointmentScreen(
+                        doctorDatesModel: cubit.doctorDatesModel));
+                cubit.resetDoctorSelection();
+                cubit.changeExpanded(expanded: false);
               } else {
                 showToast(message: "PleaseSelectDoctor");
               }

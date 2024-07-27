@@ -104,6 +104,8 @@ class GetAppointmentsErrorState extends LayoutStates {}
 
 ///CentersState
 
+class ResetDoctorSelectionState extends LayoutStates {}
+
 class GetCentersLoadingState extends LayoutStates {}
 
 class GetCentersSucsessState extends LayoutStates {}
